@@ -28,6 +28,7 @@ DEBUG = True
 APPEND_SLASH = True
 
 ALLOWED_HOSTS = ["localhost"]
+djangoserver-space
 
 
 # Application definition
