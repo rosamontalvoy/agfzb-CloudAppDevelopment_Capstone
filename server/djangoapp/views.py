@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
@@ -28,16 +30,34 @@ def contact_view(request):
     return render(request, 'djangoapp/contact.html')
 
 # Create a `login_request` view to handle sign in request
-# def login_request(request):
-# ...
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    return render(request, 'djangoapp/login.html')
 
 # Create a `logout_request` view to handle sign out request
-# def logout_request(request):
-# ...
+def logout_view(request):
+    logout(request)
+    return redirect('index')
 
 # Create a `registration_request` view to handle sign up request
-# def registration_request(request):
-# ...
+def signup(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')  # Cambia 'index' por el nombre de la vista de la página principal de tu aplicación
+    else:
+        form = UserCreationForm()
+    return render(request, 'djangoapp/registration.html', {'form': form})
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
@@ -53,4 +73,3 @@ def get_dealerships(request):
 # Create a `add_review` view to submit a review
 # def add_review(request, dealer_id):
 # ...
-

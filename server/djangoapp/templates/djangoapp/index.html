@@ -24,7 +24,26 @@
           <li><a href="/contact/">Contacto</a></li>
         </ul>
       </nav>
-          
+      <nav>
+        <!-- Otros elementos del menú de navegación -->
+      
+        <!-- Elementos para inicio de sesión y registro -->
+        {% if user.is_authenticated %}
+          <!-- Elementos para un usuario autenticado -->
+          <span class="navbar-text">Welcome, {{ user.first_name|default:user.username }}</span>
+          <a class="nav-link" href="{% url 'logout' %}">Sign Out</a>
+        {% else %}
+          <!-- Elementos para un usuario no autenticado -->
+          <form class="form-inline" action="{% url 'login' %}" method="post">
+            {% csrf_token %}
+            <input class="form-control mr-sm-2" type="text" placeholder="Username" name="username">
+            <input class="form-control mr-sm-2" type="password" placeholder="Password" name="password">
+            <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Login</button>
+          </form>
+          <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+        {% endif %}
+      </nav>
+            
     <!--Add a dealer table here -->
 
     </body>
